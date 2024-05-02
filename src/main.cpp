@@ -1,44 +1,4 @@
 #include "irc.hpp"
-
-/* int main(int ac, char **av){
-	(void)av;
-	if (ac != 3) {
-		exit(1);
-	}
-	irc ola(av[1], av[2]);
-
-	int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (socket_fd < 0){
-		std::cout << "error creating socket\n";
-		exit (1);
-	}
-	std::string ip = "127.0.0.1";
-	struct sockaddr_in address;
-	address.sin_family = AF_INET;
-	address.sin_port = htons(2021);
-	inet_pton(AF_INET, ip.c_str(), &address.sin_addr.s_addr);
-
-	if (bind(socket_fd, (const sockaddr*) &address, sizeof address) == 0){
-		std::cout << "bind worked\n";
-	}
-	int connec = connect(socket_fd, (const sockaddr*) &address, sizeof address);
-
-	if (connec == 0)
-		std::cout << "worked\n";
-	std::cout << connec << std::endl;
-		
-	while (1){
-		std::string buffer = "ola\n";
-		send(socket_fd, buffer.c_str(), buffer.length(), 0);
-
-		char rec_buffer[1024];
-		recv(socket_fd, rec_buffer, 1024, 0);
-
-		if (rec_buffer)
-			std::cout << "response was -> " << rec_buffer << std::endl;
-	}
-} */
-
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -47,7 +7,7 @@
 #include <arpa/inet.h>
 
 struct sockaddr_in serverAddress;
-fd_set fr, fw, fe;
+fd_set fr;
 
 int main()
 {
@@ -91,11 +51,11 @@ int main()
             std::cout << "Error in select()" << std::endl;
             break;
         }
-        for (int i = 0; i < highest_fd; ++i){
+        for (int i = 0; i < highest_fd; i++){
             if (FD_ISSET(i, &tmp)) {
                 if (i == mySocket){
                     int new_client_fd = accept(mySocket, NULL, NULL);
-                    if (new_client_fd <= 0)
+                    if (new_client_fd < 0)
                         std::cout << "Error accepting new client" << std::endl;
                     else {
                         std::cout << "New client connected" << std::endl;
