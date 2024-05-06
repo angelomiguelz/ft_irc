@@ -6,10 +6,12 @@
 class client
 {
 	private:
+		int fd;
 		
 	public:
-		client(/* args */);
+		client(int _fd);
 		~client();
+		int get_fd();
 };
 
 
