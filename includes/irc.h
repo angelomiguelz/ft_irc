@@ -8,6 +8,7 @@
 #include <arpa/inet.h> //-> for inet_ntoa()
 #include <poll.h> //-> for poll()
 #include <csignal> //-> for signal()
+#include <cstring>
 
 class Client {
 	public:
@@ -35,3 +36,7 @@ class Server {
 		std::vector<Client> Clients;
 		std::vector<struct pollfd> fds;
 };
+
+int filter_cmd(std::string line);
+void execute(int num, std::vector<std::string> line_words, int fd);
+std::vector<std::string> ft_split(std::string &s, char c);

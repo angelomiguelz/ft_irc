@@ -37,20 +37,37 @@ void Server::AcceptNewClient() {
 
 void Server::ReceiveNewData(int fd)
 {
-	char buffer[1024];
-	memset(buffer, 0, sizeof(buffer)); //clear buffer
+	char b[1024];
+	std::string buffer;
+	memset(b, 0, sizeof(b)); //clear buffer
+	std::string line;
+	size_t pos;
 
-	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1, 0); // receive data from givin fd
 
-	if (bytes <= 0){ //if client disconnected
+	// receive data from givin fd
+	ssize_t bytes = recv(fd, b, sizeof(buffer) - 1, 0);
+
+	if (bytes < 0){ //if client disconnected
 		std::cout << std::endl << "Client Disconnected" << std::endl;
 		close(fd);
 	}
 	else { //print the receive data
-		buffer[bytes] = 0;
-		std::cout << "Client: " << fd << "> Data: " << buffer << std::endl;
+		//buffer[bytes] = 0; // segv mabye my bad but i think its not 
+		buffer = std::string(b);
+		while((pos = buffer.find("\r\n")) != std::string::npos)
+		{
+			line = buffer.substr(0, pos);
+
+			// parse line
+			execute(filter_cmd(line), ft_split(line, ' '), fd);
+
+			buffer.erase(0, pos + 2);
+			std::cout << "Client: " << fd << "> Data: " << line << std::endl;
+		}
 	}
 }
+
+
 
 void Server::ServerSocket() {
 	struct sockaddr_in Addr;

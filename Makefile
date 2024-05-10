@@ -10,7 +10,7 @@ YELLOW = \033[0;93m
 #----- Flags ----------------------
 CXX = c++
 RM = rm -f
-CXXFLAGS = -Wall -Werror -Wextra -g -std=c++98
+CXXFLAGS = -Wall -Werror -Wextra -g -std=c++98 -fsanitize=address
 $(VERBOSE).SILENT:
 
 #----- Paths----------------------
@@ -18,7 +18,7 @@ SRC_PATH = ./src
 OBJ_PATH = ./objects
 INC = -I ./includes
 
-SRC_NAME = 	main.cpp irc.cpp
+SRC_NAME = 	main.cpp irc.cpp parser.cpp
 
 #----- Files----------------------
 OBJS = $(addprefix $(OBJ_PATH)/, $(SRC_NAME:.cpp=.o))
